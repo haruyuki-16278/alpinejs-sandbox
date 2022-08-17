@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>alpinejs sandbox</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+  </head>
+  <body>
+    <div x-data="{
+      title: 'alpinejs with unpkg',
+      count: 0,
+      increment() {this.count++;},
+      flag: false,
+    }">
+      <div class="title" x-text="title"></div>
+      <div class="counter">
+        <p>counter</p>
+        <span x-text="count"></span>
+        <button x-on:click="increment">increment</button>
+      </div>
+      <div class="togglable-element">
+        <button x-on:click="flag = !flag">toggle show below</button>
+        <div x-show="flag">
+          <p>this element will been hide and appear</p>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
