@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <!-- 文字コードにUTF-8を使用することを明示 -->
+    <meta charset="utf-8">
+    <!-- 表示を端末の幅に合わせて調整するように指示 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>template</title>
+    <!-- Alpine.jsをCDNインポートで使う  -->
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <!-- UAStyleSheetを一気にリセットする -->
+    <link rel="stylesheet" href="reset.css">
+    <!-- このページのCSSを書く -->
+    <style>
+      * {
+        /* ボックスモデルの判定をボーダーとマージンの境界に持たせる */
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+        width: 100%;
+        /* カラー指定をしやすくするために css variables を設定する */
+        --color-primary: #3CDEF2;
+        --color-secondary: #3C83F2;
+        --color-accent: #F23C83;
+        --color-text: lightgray;
+        --color-background: rgb(39, 39, 39);
+        --color-background-light: lightgray;
+        --color-text-dark: rgb(39, 39, 39);
+      }
+
+      .button {
+        width: fit-content;
+        margin-bottom: 16px;
+        padding: 8px 16px;
+        /* border-radius(要素の角を丸くする半径)は%指定だとイマイチになることが多いのでvhという単位で指定すると困ることが少ない */
+        border-radius: 100vh;
+        /* CSS variables を利用して色をしていするときは var() を用いる */
+        color: var(--color-text-dark);
+        background-color: var(--color-primary);
+      }
+
+      .button:last-child {
+        margin-bottom: 0;
+      }
+
+      .button.outlined {
+        border: 2px solid var(--color-secondary);
+        color: var(--color-text);
+        background-color: initial;
+      }
+
+      .button.disabled {
+        color: white;
+        background-color: var(--color-background-light);
+      }
+
+      .background {
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-background);
+        display: flex;
+        /* flex の向きを指定する(columnは垂直方向) */
+        flex-direction: column;
+        /* flexの向きに対して垂直に交わる向きを中央寄せする */
+        /* この場合はページの水平方向 */
+        align-items: center;
+        /* flexの向きに対して平行な向きを中央寄せする */
+        /* この場合はページの垂直方向 */
+        justify-content: center;
+      }
+
+      .title {
+        margin: 32px;
+        color: var(--color-primary);
+        font-size: larger;
+        font-weight: bolder;
+      }
+
+      /* ダイアログここから */
+
+      .dialog-background {
+        width: 100vw;
+        height: 100vh;
+        z-index: 100;
+        background-color: rgba(255, 255, 255, .8);
+        position: absolute;
+        top: 0;
+        left: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .dialog-body {
+        width: 80%;
+        max-height: 80%;
+        margin: 16px;
+        border-radius: 16px;
+        padding: 32px;
+        color: var(--color-text);
+        background-color: var(--color-background);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+      }
+
+      .dialog-message {
+        width: 100%;
+        margin-bottom: 32px;
+      }
+
+    </style>
+  </head>
+  <body>
+    <div class="background" x-data>
+      <div class="title">This is dialog.</div>
+      <div class="button" x-on:click="Alpine.store('showDialog', true);">Open Dialog</div>
+      <div class="button" x-on:click="Alpine.store('dialogMessage', 'stored message with Alpine.store()'); Alpine.store('showDialog', true);">Open Dialog with message</div>
+      <div x-show="$store.showDialog" class="dialog-background">
+        <div class="dialog-body">
+          <div class="dialog-message">
+            <p x-text="$store.dialogMessage"></p>
+          </div>
+          <div class="button outlined" x-on:click="Alpine.store('showDialog', false);">Close Dialog</div>
+        </div>
+      </div>
+    </div>
+  </body>
+  <script>
+    document.addEventListener('alpine:init', () => {
+      Alpine.store('dialogMessage', 'default message')
+      Alpine.store('showDialog', false)
+    })
+  </script>
+</html>
