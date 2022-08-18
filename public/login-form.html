@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>login form</title>
+    <script src="//unpkg.com/alpinejs" defer></script>
+    <link rel="stylesheet" href="reset.css">
+    <style>
+      * {
+        /* ボックスモデルの判定をボーダーとマージンの境界に持たせる */
+        box-sizing: border-box;
+      }
+
+      html, body {
+        height: 100%;
+        width: 100%;
+        /* カラー指定をしやすくするために css variables を設定する */
+        --color-primary: #3CDEF2;
+        --color-secondary: #3C83F2;
+        --color-accent: #F23C83;
+        --color-text: lightgray;
+        --color-background: rgb(39, 39, 39);
+        --color-background-light: lightgray;
+        --color-text-dark: rgb(39, 39, 39);
+      }
+
+      .button {
+        padding: 8px 16px;
+        /* border-radius(要素の角を丸くする半径)は%指定だとイマイチになることが多いのでvhという単位で指定すると困ることが少ない */
+        border-radius: 100vh;
+        /* CSS variables を利用して色をしていするときは var() を用いる */
+        color: var(--color-text-dark);
+        background-color: var(--color-primary);
+      }
+
+      .button.outlined {
+        border: 2px solid var(--color-secondary);
+        color: var(--color-text);
+        background-color: initial;
+      }
+
+      .button.disabled {
+        color: white;
+        background-color: var(--color-background-light);
+      }
+
+      .background {
+        width: 100%;
+        height: 100%;
+        background-color: var(--color-background);
+        display: flex;
+        /* flex の向きを指定する(columnは垂直方向) */
+        flex-direction: column;
+        /* flexの向きに対して垂直に交わる向きを中央寄せする */
+        /* この場合はページの水平方向 */
+        align-items: center;
+        /* flexの向きに対して平行な向きを中央寄せする */
+        /* この場合はページの垂直方向 */
+        justify-content: center;
+      }
+
+      .title {
+        margin: 32px;
+        color: var(--color-primary);
+        font-size: larger;
+        font-weight: bolder;
+      }
+
+      .panel {
+        width: min(80%, 250px);
+        color: var(--color-text);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
+
+      .panel input {
+        width: 100%;
+        margin-bottom: 16px;
+        border-radius: 100vh;
+        padding: 8px 16px;
+        color: var(--color-text-dark);
+        background: var(--color-background-light);
+      }
+
+      .panel .button {
+        margin-bottom: 16px;
+        width: fit-content;
+        height: fit-content;
+      }
+
+      .panel .button:last-child {
+        margin-bottom: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="background">
+      <div class="title">This is login form.</div>
+      <div class="panel" x-data="loginFormCtrl">
+        <input type="text" x-model="id" placeholder="ID">
+        <input type="password" x-model="password" placeholder="password">
+        <a class="button" x-bind:class="submitDisableFlag() ? 'disabled' : ''" x-on:click="submit">start</a>
+      </div>
+    </div>
+  </body>
+  <script>
+    function loginFormCtrl () {
+      return {
+        id: '',
+        password: '',
+        // id か パスワード が未入力の間はtrueになるフラグ
+        submitDisableFlag() {
+          console.log('fire')
+          return this.id === '' || this.password === '';
+        },
+        submit() {
+          console.log(this.id, this.password);
+        }
+      }
+    }
+  </script>
+</html>
