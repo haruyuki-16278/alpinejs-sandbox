@@ -116,6 +116,7 @@
           return this.id === '' || this.password === '';
         },
         submit() {
+          if (this.submitDisableFlag()) return
           console.log(this.id, this.password);
         }
       }
