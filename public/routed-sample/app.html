@@ -77,7 +77,7 @@
             break;
           case '#home':
           default:
-            page = '<h1>home</h1>';
+            page = (await axios.get('./pages/home/home.html')).data;
             break;
         }
         Alpine.store('page', page);
