@@ -10,12 +10,48 @@
       html, body {
         height: 100%;
         width: 100%;
+        /* CSS Variables 宣言 */
+        --header-height: 40px;
       }
 
       #App {
+        height: calc(100% - 2 * var(--header-height));
         width: 100%;
-        height: 100%;
-        overflow: hidden;
+      }
+
+      .header {
+        height: var(--header-height);
+        width: 100%;
+        border-bottom: 1px solid black;
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .header-center {
+        font-weight: bold;
+      }
+
+      .header-left, .header-right {
+        padding: 0 16px;
+      }
+
+      .footer {
+        height: var(--header-height);
+        width: 100%;
+        border-top: 1px solid black;
+        display: flex;
+        align-items: center;
+        justify-content: space-around;
+      }
+
+      .footer-button {
+        padding: 0 16px;
+      }
+
+      .footer-button.active {
+        font-weight: bold;
       }
     </style>
     <!-- Alpine.js import -->
@@ -24,24 +60,52 @@
     <!-- axios import -->
     <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
     <script>
-      async function onRouteChange() {
+      // フッター制御関数
+      function footerCtrl() {
+        return {
+          moveTo(pageHash) {
+            window.location.hash = pageHash
+          }
+        }
+      }
+      // ルーティング用関数
+      async function router() {
         let page;
         switch (window.location.hash) {
-          case '#page2':
-            page = '<h1>page2</h1>';
+          case '#mypage':
+            page = '<h1>mypage</h1>';
             break;
-          case '#page1':
+          case '#home':
           default:
-            page = '<h1>page1</h1>';
+            page = '<h1>home</h1>';
             break;
         }
         Alpine.store('page', page);
+        Alpine.store('activePage', window.location.hash)
       }
-      window.addEventListener('hashchange', onRouteChange);
-      onRouteChange();
+      // 初期化処理
+      window.addEventListener('hashchange', router);
+      router();
+      Alpine.store('title', 'This is Title.')
+      Alpine.store('showFooter', true)
     </script>
   </head>
   <body x-data>
-    <div x-html="$store.page"></div>
+    <div class="header">
+      <div class="header-center" x-text="$store.title"></div>
+    </div>
+    <div id="App" x-html="$store.page"></div>
+    <div class="footer" x-show="$store.showFooter" x-data="footerCtrl">
+      <div class="footer-button"
+          x-on:click="moveTo('#home')"
+          x-bind:class="$store.activePage === '#home' ? 'active' : ''">
+        home
+      </div>
+      <div class="footer-button"
+          x-on:click="moveTo('#mypage')"
+          x-bind:class="$store.activePage === '#mypage' ? 'active' : ''">
+        mypage
+      </div>
+    </div>
   </body>
 </html>
